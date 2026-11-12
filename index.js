@@ -1,4 +1,89 @@
 
+function showLicense(){
+
+const STORAGE_KEY="prime_x_activated";
+
+if(localStorage.getItem(STORAGE_KEY)==="yes"){
+startPrimeX();
+return;
+}
+
+let overlay=document.createElement("div");
+
+overlay.id="prime-x-license";
+overlay.style.cssText="position:fixed;inset:0;background:#030814;z-index:2147483647;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Arial,sans-serif;";
+
+overlay.innerHTML=`
+<div style="width:100%;max-width:340px;background:#0a0f1d;border:1px solid #00f2fe;border-radius:20px;padding:25px;text-align:center;box-shadow:0 0 30px #00f2fe44;">
+
+<img src="https://i.ibb.co/395wVhkN/file-133.jpg" style="width:85px;height:85px;border-radius:50%;object-fit:cover;border:2px solid #00f2fe;">
+
+<h2 style="color:#00f2fe;">Prime X</h2>
+
+<p style="color:#aaa;font-size:13px;">LICENSE ACTIVATION</p>
+
+<input id="px-key" type="password"
+placeholder="Enter License Key"
+autocomplete="off"
+autocapitalize="off"
+spellcheck="false"
+style="box-sizing:border-box;width:100%;padding:14px;border-radius:10px;border:1px solid #00f2fe;background:#101b30;color:white;margin:15px 0;outline:none;">
+
+<button id="px-activate"
+style="width:100%;padding:14px;background:#00d9ed;color:#00101a;border:0;border-radius:10px;font-weight:bold;cursor:pointer;">
+ACTIVATE PRIME X
+</button>
+
+<p id="px-error" style="color:#ff5555;font-size:13px;min-height:18px;"></p>
+
+</div>`;
+
+document.body.appendChild(overlay);
+
+let input=overlay.querySelector("#px-key");
+let btn=overlay.querySelector("#px-activate");
+let error=overlay.querySelector("#px-error");
+
+input.addEventListener("copy",e=>e.preventDefault());
+input.addEventListener("cut",e=>e.preventDefault());
+input.addEventListener("contextmenu",e=>e.preventDefault());
+
+function check(){
+
+if(input.value.trim()==="12345678910sabbirbai"){
+
+try{
+localStorage.setItem(STORAGE_KEY,"yes");
+}catch(e){
+error.textContent="Storage unavailable. Activation failed.";
+return;
+}
+
+input.value="";
+overlay.remove();
+
+startPrimeX();
+
+}else{
+
+error.textContent="INVALID LICENSE KEY!";
+input.value="";
+input.focus();
+
+}
+
+}
+
+btn.onclick=check;
+
+input.onkeydown=e=>{
+if(e.key==="Enter")check();
+};
+
+input.focus();
+
+}
+
 javascript:(function(){
 const LICENSE_KEY="12345678910sabbirbai";
 const STORAGE_KEY="prime_x_license_active";
