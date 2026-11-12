@@ -1,11 +1,18 @@
 
 javascript:(function(){
+const LICENSE_KEY="12345678910sabbirbai";
+const STORAGE_KEY="prime_x_license_active";
+const IMAGE_URL="https://i.ibb.co/395wVhkN/file-133.jpg";
+
 if(document.getElementById("tl-btn"))return;
 
-let n="https://i.ibb.co/395wVhkN/file-133.jpg";
-let o=document.createElement("div");
+function startPrimeX(){
 
+if(document.getElementById("tl-btn"))return;
+
+let o=document.createElement("div");
 o.id="tl-btn";
+
 o.style.cssText="position:fixed;right:20px;bottom:120px;width:85px;height:105px;border-radius:18px;background:#0a0f1d;border:2px solid #00f2fe;z-index:999999;display:flex;flex-direction:column;align-items:center;justify-content:center;color:white;font-size:13px;font-weight:bold;cursor:pointer;text-align:center;box-shadow:0 0 20px rgba(0,242,254,0.6);user-select:none;overflow:hidden;touch-action:none;";
 
 let L=document.createElement("div");
@@ -25,16 +32,21 @@ function playBeep(){
 try{
 let ctx=new(window.AudioContext||window.webkitAudioContext)();
 let now=ctx.currentTime;
+
 [523.25,659.25,783.99,1046.50].forEach((freq,idx)=>{
 let osc=ctx.createOscillator();
 let gain=ctx.createGain();
+
 osc.type="sine";
 osc.frequency.setValueAtTime(freq,now+idx*0.08);
+
 gain.gain.setValueAtTime(0,now+idx*0.08);
 gain.gain.linearRampToValueAtTime(0.06,now+idx*0.08+0.04);
 gain.gain.exponentialRampToValueAtTime(0.001,now+idx*0.08+0.7);
+
 osc.connect(gain);
 gain.connect(ctx.destination);
+
 osc.start(now+idx*0.08);
 osc.stop(now+idx*0.08+0.8);
 });
@@ -43,8 +55,9 @@ osc.stop(now+idx*0.08+0.8);
 
 function l(){
 o.innerHTML=
-'<img src="'+n+'" style="width:65px;height:65px;object-fit:cover;border-radius:50%;pointer-events:none;border:2px solid #00f2fe;">'+
+'<img src="'+IMAGE_URL+'" style="width:65px;height:65px;object-fit:cover;border-radius:50%;pointer-events:none;border:2px solid #00f2fe;">'+
 '<div style="color:#00f2fe;font-size:13px;font-weight:900;margin-top:5px;letter-spacing:1px;pointer-events:none;">Prime X</div>';
+
 o.style.background="#0a0f1d";
 }
 
@@ -59,6 +72,7 @@ s=false;
 o.setPointerCapture(e.pointerId);
 r=e.clientX;
 c=e.clientY;
+
 let t=o.getBoundingClientRect();
 d=t.left;
 S=t.top;
@@ -66,10 +80,13 @@ S=t.top;
 
 o.onpointermove=e=>{
 if(!i&&Math.abs(e.clientX-r)<4&&Math.abs(e.clientY-c)<4)return;
+
 i=true;
 s=true;
+
 let x=d+(e.clientX-r);
 let y=S+(e.clientY-c);
+
 o.style.left=Math.max(0,Math.min(x,window.innerWidth-85))+"px";
 o.style.top=Math.max(0,Math.min(y,window.innerHeight-105))+"px";
 o.style.right="auto";
@@ -82,6 +99,7 @@ try{o.releasePointerCapture(e.pointerId)}catch(t){}
 };
 
 function T(e){
+
 let all=Array.from(document.querySelectorAll("*"));
 let target=null;
 
@@ -112,7 +130,14 @@ let cx=rect.left+rect.width/2;
 let cy=rect.top+rect.height/2;
 
 ['pointerdown','mousedown','touchstart','pointerup','mouseup','touchend','click'].forEach(evt=>{
-let evOptions={bubbles:true,cancelable:true,view:window,clientX:cx,clientY:cy};
+let evOptions={
+bubbles:true,
+cancelable:true,
+view:window,
+clientX:cx,
+clientY:cy
+};
+
 let event;
 
 if(evt.startsWith('touch')){
@@ -120,6 +145,7 @@ event=new Event(evt,{bubbles:true,cancelable:true});
 }else{
 event=new MouseEvent(evt,evOptions);
 }
+
 target.dispatchEvent(event);
 });
 }else{
@@ -129,6 +155,7 @@ console.warn("Element not found");
 
 o.onclick=async()=>{
 if(s||a)return;
+
 a=true;
 
 o.innerHTML="<span style='font-size:11px;color:#00f2fe;'>Scanning...</span>";
@@ -161,5 +188,89 @@ o.innerHTML='<div>'+signal+'</div><div style="font-size:11px;margin-top:2px;font
 :(clearInterval(timer),l(),a=false);
 },1000);
 };
+
+}
+
+function showLicense(){
+
+let overlay=document.createElement("div");
+
+overlay.id="prime-x-license";
+
+overlay.style.cssText="position:fixed;inset:0;background:rgba(3,8,20,.97);z-index:99999999;display:flex;align-items:center;justify-content:center;padding:20px;font-family:Arial,sans-serif;";
+
+overlay.innerHTML=`
+<div style="width:100%;max-width:340px;background:#0a0f1d;border:1px solid #00f2fe;border-radius:20px;padding:25px;text-align:center;box-shadow:0 0 30px rgba(0,242,254,.25);">
+
+<img src="${IMAGE_URL}" style="width:85px;height:85px;border-radius:50%;object-fit:cover;border:2px solid #00f2fe;">
+
+<h2 style="color:#00f2fe;margin:12px 0 5px;">Prime X</h2>
+
+<p style="color:#aaa;font-size:13px;">LICENSE ACTIVATION</p>
+
+<input id="prime-x-license-input" type="password" placeholder="Enter Your License Key" autocomplete="off" style="box-sizing:border-box;width:100%;padding:14px;border-radius:10px;border:1px solid #00f2fe;background:#101b30;color:white;outline:none;margin:15px 0;">
+
+<button id="prime-x-activate" style="width:100%;padding:13px;background:#00d9ed;color:#00101a;border:0;border-radius:10px;font-weight:bold;font-size:15px;cursor:pointer;">
+ACTIVATE PRIME X
+</button>
+
+<p id="prime-x-license-error" style="color:#ff5555;font-size:13px;min-height:18px;"></p>
+
+<div style="color:#64748b;font-size:11px;">Secure Access • Prime X</div>
+
+</div>
+`;
+
+document.body.appendChild(overlay);
+
+let input=overlay.querySelector("#prime-x-license-input");
+let btn=overlay.querySelector("#prime-x-activate");
+let error=overlay.querySelector("#prime-x-license-error");
+
+function verify(){
+
+let entered=input.value.trim();
+
+if(entered===LICENSE_KEY){
+
+try{
+localStorage.setItem(STORAGE_KEY,"active");
+}catch(e){
+error.textContent="Browser storage unavailable.";
+return;
+}
+
+overlay.remove();
+startPrimeX();
+
+}else{
+
+error.textContent="Invalid License Key! Try Again.";
+input.value="";
+input.focus();
+
+}
+}
+
+btn.onclick=verify;
+
+input.onkeydown=e=>{
+if(e.key==="Enter")verify();
+};
+
+input.focus();
+}
+
+try{
+
+if(localStorage.getItem(STORAGE_KEY)==="active"){
+startPrimeX();
+}else{
+showLicense();
+}
+
+}catch(e){
+showLicense();
+}
 
 })();
